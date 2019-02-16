@@ -15,3 +15,31 @@ cursor = conn.cursor()
 q1 = "SELECT * FROM sqlite_master WHERE type='table';"
 pd.read_sql_query(q1, conn)
 cursor.execute(q1).fetchall()
+
+#Now that we know that the facts table looks like. Lets run a few
+#queries to gain some data insights.
+q2 = '''SELECT * FROM facts LIMIT 5'''
+pd.read_sql_query(q2, conn)
+
+q3 = '''
+SELECT min(population) min_pop, max(population) max_pop, 
+min(population_growth) min_pop_grwth, max(population_growth) max_pop_grwth 
+FROM facts
+'''
+pd.read_sql_query(q3, conn)
+
+q4 = '''
+SELECT *
+FROM facts
+WHERE population == (SELECT max(population) FROM facts);
+'''
+
+pd.read_sql_query(q4, conn)
+
+q5 = '''
+SELECT *
+FROM facts
+WHERE population == (SELECT min(population) FROM facts);
+'''
+
+pd.read_sql_query(q5, conn)

@@ -43,3 +43,35 @@ WHERE population == (SELECT min(population) FROM facts);
 '''
 
 pd.read_sql_query(q5, conn)
+
+#Now that we have gained some insight regarding the data
+#let's try to create some visualization to better present our findings
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+
+fig = plt.figure(figsize=(10,10))
+ax = fig.add_subplot(111)
+
+q6 = '''
+SELECT population, population_growth, birth_rate, death_rate
+FROM facts
+WHERE population != (SELECT max(population) FROM facts)
+and population != (SELECT min(population) FROM facts);
+'''
+pd.read_sql_query(q6, conn).hist(ax=ax)
+
+#Let's try to find which countries have the highest population.
+q7 = '''SELECT name, CAST(population as float)/CAST(area as float) density 
+FROM facts 
+ORDER BY density DESC 
+LIMIT 20'''
+pd.read_sql_query(q7, conn)
+
+q7 = '''SELECT population, population_growth, birth_rate, death_rate
+FROM facts
+WHERE population != (SELECT max(population) FROM facts)
+and population != (SELECT min(population) FROm facts);
+'''
+pd.read_sql_query(q7, conn)
